@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Come un albero · Laboratorio di lettura incarnata</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Jost:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --carta:     #f4f0e6;
+  --carta-alt: #ece7d8;
+  --bianco:    #fdfaf4;
+  --inchiostro:#18160e;
+  --ink-2:     #3d3a2e;
+  --ink-3:     #7a7464;
+
+  /* colori organici per le 3 attività */
+  --verde:     #2d6040;
+  --verde-l:   #e8f2ec;
+  --terra:     #7a3e18;
+  --terra-l:   #f5ece4;
+  --cielo:     #1e4a72;
+  --cielo-l:   #e4eef7;
+
+  --bordo:     rgba(24,22,14,0.13);
+  --bordo-f:   rgba(24,22,14,0.22);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--carta);
+  color: var(--inchiostro);
+  font-family: 'Lora', serif;
+  font-size: 17px;
+  line-height: 1.78;
+}
+
+/* ─── FRONTESPIZIO ─── */
+.front {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.front-sx {
+  background: var(--verde);
+  padding: 80px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+/* anelli dell'albero decorativi */
+.front-sx::before {
+  content: '';
+  position: absolute;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.07);
+  bottom: -200px; left: -150px;
+  pointer-events: none;
+}
+.front-sx::after {
+  content: '';
+  position: absolute;
+  width: 350px; height: 350px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.05);
+  bottom: -120px; left: -80px;
+  pointer-events: none;
+}
+
+.front-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+}
+
+.front-titolo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.front-titolo h1 {
+  font-family: 'Lora', serif;
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+.front-titolo h1 em {
+  font-style: italic;
+  color: rgba(255,255,255,0.55);
+  display: block;
+  font-size: 0.75em;
+  font-weight: 400;
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
+.front-titolo .autori {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.1em;
+  margin-top: 20px;
+}
+
+.front-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.front-meta-riga {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.4);
+}
+.front-meta-riga span { color: rgba(255,255,255,0.75); }
+
+.front-dx {
+  background: var(--carta-alt);
+  padding: 80px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+}
+
+.front-intro-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--verde);
+  margin-bottom: 14px;
+}
+
+.front-intro p {
+  font-size: 1rem;
+  line-height: 1.82;
+  color: var(--ink-2);
+}
+.front-intro p + p { margin-top: 14px; }
+
+.front-tre {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--bordo);
+}
+.front-att {
+  padding: 18px 24px;
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--bordo);
+  background: var(--bianco);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.front-att:last-child { border-bottom: none; }
+.front-att:hover { background: var(--carta-alt); }
+.fa-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+  width: 22px;
+}
+.fa-testo { }
+.fa-tit {
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 2px;
+}
+.fa-sub {
+  font-size: 0.8rem;
+  color: var(--ink-3);
+  font-style: italic;
+}
+
+/* ─── ANTEPRIMA ALBO ─── */
+.anteprima-albo {
+  background: var(--bianco);
+  border-top: 2px solid var(--inchiostro);
+  border-bottom: 2px solid var(--inchiostro);
+  padding: 60px 80px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.albo-identita { }
+.albo-id-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--verde);
+  margin-bottom: 16px;
+}
+.albo-id-titolo {
+  font-family: 'Lora', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+.albo-id-autori {
+  font-size: 0.9rem;
+  color: var(--ink-3);
+  font-style: italic;
+  margin-bottom: 20px;
+}
+.albo-id-dati {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.aid {
+  display: flex;
+  gap: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--ink-3);
+  align-items: flex-start;
+}
+.aid strong { color: var(--inchiostro); font-weight: 400; }
+
+.albo-contenuto { }
+.albo-c-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--verde);
+  margin-bottom: 16px;
+}
+.albo-c-testo {
+  font-size: 1.05rem;
+  line-height: 1.82;
+  color: var(--ink-2);
+  margin-bottom: 24px;
+}
+.albo-c-testo em { color: var(--verde); font-style: italic; }
+
+/* Parallelismi anatomici */
+.paralleli {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--bordo);
+  border: 1px solid var(--bordo);
+  margin-top: 8px;
+}
+.par-voce {
+  background: var(--carta);
+  padding: 14px 18px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.par-albero {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--verde);
+  letter-spacing: 0.05em;
+  flex: 1;
+  font-weight: 700;
+}
+.par-freccia { color: var(--bordo-f); font-size: 0.9rem; flex-shrink: 0; }
+.par-corpo {
+  font-size: 0.9rem;
+  color: var(--ink-2);
+  flex: 1;
+}
+
+/* ─── STRUTTURA ATTIVITÀ ─── */
+.attivita {
+  padding: 72px 80px;
+  border-bottom: 1px solid var(--bordo);
+}
+.attivita:nth-child(even) { background: var(--carta-alt); }
+
+.att-numero-grande {
+  font-family: 'DM Mono', monospace;
+  font-size: 6rem;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 8px;
+  opacity: 0.07;
+  letter-spacing: -0.05em;
+  position: absolute;
+  right: 80px;
+  top: 72px;
+  pointer-events: none;
+}
+
+.att-head {
+  position: relative;
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--bordo);
+}
+
+.att-kicker {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.att-kicker::before { content: ''; width: 24px; height: 1.5px; background: currentColor; }
+
+.att-titolo {
+  font-family: 'Lora', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+  max-width: 680px;
+}
+
+.att-sottotitolo {
+  font-size: 1rem;
+  color: var(--ink-3);
+  font-style: italic;
+  max-width: 560px;
+}
+
+.att-pillole {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.pillola {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border: 1px solid;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* ─── CITAZIONE ALBO ─── */
+.cit-albo {
+  padding: 36px 44px;
+  margin-bottom: 40px;
+  position: relative;
+}
+.cit-albo::before {
+  content: '"';
+  font-family: 'Lora', serif;
+  font-size: 8rem;
+  line-height: 0.7;
+  position: absolute;
+  top: 10px; left: 12px;
+  opacity: 0.12;
+}
+.cit-albo p {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.85;
+  color: var(--inchiostro);
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+}
+.cit-albo cite {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-style: normal;
+  margin-top: 12px;
+}
+
+/* ─── GRIGLIA CORPO ATT ─── */
+.att-corpo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+.att-corpo.piena { grid-template-columns: 1fr; }
+.att-corpo.tre { grid-template-columns: 1fr 1fr 1fr; }
+
+/* ─── BLOCCO ─── */
+.blocco {
+  background: var(--bianco);
+  border: 1px solid var(--bordo);
+  padding: 32px;
+}
+.blocco.wide { grid-column: 1 / -1; }
+
+.b-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--bordo);
+}
+.b-label::after { content: ''; flex: 1; height: 1px; background: var(--bordo); }
+
+.b-testo {
+  font-size: 0.93rem;
+  line-height: 1.78;
+  color: var(--ink-2);
+}
+.b-testo p + p { margin-top: 12px; }
+.b-testo strong { color: var(--inchiostro); font-weight: 600; }
+
+/* Steps numerati */
+.steps { list-style: none; }
+.step {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 14px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--bordo);
+  font-size: 0.9rem;
+  line-height: 1.68;
+  color: var(--ink-2);
+  align-items: flex-start;
+}
+.step:last-child { border-bottom: none; }
+.step-n {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--ink-3);
+  padding-top: 3px;
+  letter-spacing: 0.05em;
+}
+.step strong { color: var(--inchiostro); }
+
+/* Domanda corpo */
+.domanda {
+  padding: 18px 22px;
+  border-left: 3px solid;
+  background: var(--carta-alt);
+  font-style: italic;
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--ink-2);
+  margin-top: 20px;
+}
+
+/* Nota docente */
+.nota {
+  display: flex;
+  gap: 14px;
+  padding: 16px 20px;
+  border: 1px dashed var(--bordo-f);
+  font-size: 0.83rem;
+  line-height: 1.68;
+  color: var(--ink-3);
+  font-style: italic;
+  margin-top: 14px;
+  background: var(--carta-alt);
+}
+.nota::before { content: '↳'; flex-shrink: 0; margin-top: 1px; color: var(--verde); }
+
+/* Mappa corporea illustrata */
+.mappa-corpo {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 20px;
+  align-items: start;
+  padding: 24px;
+  background: var(--carta-alt);
+  border: 1px solid var(--bordo);
+  margin-top: 20px;
+}
+.corpo-svg { width: 80px; }
+.zona-list { list-style: none; }
+.zona-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bordo);
+  font-size: 0.85rem;
+  display: flex; gap: 12px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.zona-item:last-child { border-bottom: none; }
+.zona-nome {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  flex-shrink: 0;
+  width: 100px;
+  padding-top: 1px;
+}
+
+/* Scheda-diario */
+.scheda-diario {
+  background: var(--carta-alt);
+  border: 1px solid var(--bordo);
+  border-top: 3px solid;
+  padding: 28px 32px;
+  margin-top: 8px;
+}
+.sd-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 14px;
+}
+.sd-domande { list-style: none; }
+.sd-domanda {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--bordo);
+  font-style: italic;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.sd-domanda:last-child { border-bottom: none; }
+.sd-domanda::before {
+  content: '—';
+  flex-shrink: 0;
+  color: var(--ink-3);
+  margin-top: 1px;
+}
+
+/* Tabella parallelismi */
+.tavola {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.tavola th {
+  background: var(--inchiostro);
+  color: var(--carta);
+  padding: 12px 16px;
+  text-align: left;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+.tavola td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--bordo);
+  line-height: 1.55;
+  vertical-align: top;
+}
+.tavola tr:nth-child(even) td { background: var(--carta-alt); }
+.tavola td:first-child {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+/* Colori per attività */
+.a1 { --colore: var(--verde); --colore-l: var(--verde-l); }
+.a2 { --colore: var(--terra); --colore-l: var(--terra-l); }
+.a3 { --colore: var(--cielo); --colore-l: var(--cielo-l); }
+
+.a1 .att-kicker { color: var(--verde); }
+.a2 .att-kicker { color: var(--terra); }
+.a3 .att-kicker { color: var(--cielo); }
+
+.a1 .cit-albo { background: var(--verde-l); border-left: 3px solid var(--verde); }
+.a2 .cit-albo { background: var(--terra-l); border-left: 3px solid var(--terra); }
+.a3 .cit-albo { background: var(--cielo-l); border-left: 3px solid var(--cielo); }
+
+.a1 .b-label { color: var(--verde); }
+.a2 .b-label { color: var(--terra); }
+.a3 .b-label { color: var(--cielo); }
+
+.a1 .pillola { color: var(--verde); border-color: var(--verde); }
+.a2 .pillola { color: var(--terra); border-color: var(--terra); }
+.a3 .pillola { color: var(--cielo); border-color: var(--cielo); }
+
+.a1 .domanda { border-color: var(--verde); }
+.a2 .domanda { border-color: var(--terra); }
+.a3 .domanda { border-color: var(--cielo); }
+
+.a1 .scheda-diario { border-top-color: var(--verde); }
+.a2 .scheda-diario { border-top-color: var(--terra); }
+.a3 .scheda-diario { border-top-color: var(--cielo); }
+
+.a1 .fa-num { color: var(--verde); }
+.a2 .fa-num { color: var(--terra); }
+.a3 .fa-num { color: var(--cielo); }
+
+/* ─── PIEDE ─── */
+.piede {
+  background: var(--inchiostro);
+  color: rgba(244,240,230,0.35);
+  padding: 32px 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.piede strong { color: rgba(244,240,230,0.75); }
+
+/* ─── REVEAL ─── */
+.rv { opacity: 0; transform: translateY(16px); transition: opacity .5s ease, transform .5s ease; }
+.rv.on { opacity: 1; transform: none; }
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .front { grid-template-columns: 1fr; }
+  .front-dx { padding: 48px 28px; }
+  .front-sx { padding: 56px 28px; min-height: 40vh; }
+  .anteprima-albo, .attivita, .piede { padding-left: 28px; padding-right: 28px; }
+  .anteprima-albo { grid-template-columns: 1fr; }
+  .att-corpo, .att-corpo.tre { grid-template-columns: 1fr; }
+  .paralleli { grid-template-columns: 1fr; }
+  .mappa-corpo { grid-template-columns: 1fr; }
+  .att-numero-grande { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════ FRONTESPIZIO ════════════ -->
+<div class="front">
+  <div class="front-sx">
+    <div class="front-tag">UDA · Il Corpo che Legge · Laboratorio 4</div>
+    <div class="front-titolo">
+      <h1>
+        <em>laboratorio di lettura incarnata</em>
+        Come<br>un albero
+      </h1>
+      <div class="autori">Maria Gianferrari · ill. Felicita Sala · Rizzoli, 2021</div>
+    </div>
+    <div class="front-meta">
+      <div class="front-meta-riga">◦ Classe <span>III Liceo Scientifico</span></div>
+      <div class="front-meta-riga">◦ Attività <span>3 laboratori · ~75 minuti totali</span></div>
+      <div class="front-meta-riga">◦ Dimensioni <span>corpo · spazio · comunità</span></div>
+      <div class="front-meta-riga">◦ Materiali <span>l'albo · carta · matite · corpo</span></div>
+    </div>
+  </div>
+  <div class="front-dx">
+    <div class="front-intro">
+      <div class="front-intro-label">Premessa pedagogica</div>
+      <p>«Come un albero» offre un paradosso fertile per i ragazzi di terza liceo: un testo «per bambini» che contiene una delle metafore più potenti per la cognizione incarnata. Il parallelismo anatomico tra corpo umano e albero — tronco/colonna, corteccia/pelle, linfa/sangue, radici/piedi, rami/braccia — non è ornamentale: è un invito esplicito a leggere il proprio corpo come testo e a leggere il testo con il corpo.</p>
+      <p>Queste tre attività portano gli studenti attraverso tre scale di esperienza incarnata: il corpo individuale (Attività 1), il corpo in relazione con lo spazio (Attività 2), il corpo come parte di una comunità (Attività 3). Ciascuna può essere usata autonomamente o in sequenza nel laboratorio di lettura.</p>
+    </div>
+    <div class="front-tre">
+      <div class="front-att a1" onclick="document.getElementById('att1').scrollIntoView({behavior:'smooth'})">
+        <div class="fa-num">01</div>
+        <div class="fa-testo">
+          <div class="fa-tit">Sono un albero: la mappa corporea</div>
+          <div class="fa-sub">Il parallelismo anatomico come pratica di autoascolto · 25 min</div>
+        </div>
+      </div>
+      <div class="front-att a2" onclick="document.getElementById('att2').scrollIntoView({behavior:'smooth'})">
+        <div class="fa-num">02</div>
+        <div class="fa-testo">
+          <div class="fa-tit">Radici e rami: leggere con il corpo nello spazio</div>
+          <div class="fa-sub">La postura come interpretazione del testo · 25 min</div>
+        </div>
+      </div>
+      <div class="front-att a3" onclick="document.getElementById('att3').scrollIntoView({behavior:'smooth'})">
+        <div class="fa-num">03</div>
+        <div class="fa-testo">
+          <div class="fa-tit">Siamo foresta: la rete sotterranea in classe</div>
+          <div class="fa-sub">Il corpo sociale e la lettura relazionale · 25 min</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════ ANTEPRIMA ALBO ════════════ -->
+<div class="anteprima-albo rv">
+  <div class="albo-identita">
+    <div class="albo-id-label">L'albo</div>
+    <div class="albo-id-titolo">Come un albero</div>
+    <div class="albo-id-autori">Maria Gianferrari<br>ill. Felicita Sala</div>
+    <div class="albo-id-dati">
+      <div class="aid"><span>Ed.</span><strong>Rizzoli, 2021</strong></div>
+      <div class="aid"><span>Pag.</span><strong>40 · 28,7×21,5 cm</strong></div>
+      <div class="aid"><span>Stile</span><strong>testo poetico + ill. naturaliste</strong></div>
+      <div class="aid"><span>Illustratrice</span><strong>Premio Andersen 2020</strong></div>
+      <div class="aid"><span>Tema</span><strong>corpo · natura · comunità</strong></div>
+    </div>
+  </div>
+  <div class="albo-contenuto">
+    <div class="albo-c-label">Contenuto e struttura del testo</div>
+    <div class="albo-c-testo">
+      L'albo costruisce pagina per pagina un <em>parallelismo sistematico</em> tra la struttura fisica dell'albero e quella del corpo umano. Il testo poetico di Gianferrari alterna descrizioni anatomiche precise a inviti all'azione rivolti in seconda persona al lettore («Sii un albero! Punta in alto, tendi i tuoi rami verso il sole»). Le illustrazioni di Felicita Sala sovrappongono figure umane e vegetali in tavole che rendono visibile l'analogia.<br><br>Nella seconda parte, l'albo apre alla dimensione <em>sociale</em>: come gli alberi comunicano attraverso reti di radici e miceli, così gli esseri umani si nutrono di connessione, condivisione e cura reciproca. Il testo si conclude con un appello: <em>«Siate alberi, allora, e insieme saremo foresta»</em>.
+    </div>
+    <div class="albo-id-label" style="margin-bottom:12px">Parallelismi anatomici nel testo</div>
+    <div class="paralleli">
+      <div class="par-voce">
+        <div class="par-albero">TRONCO</div>
+        <div class="par-freccia">→</div>
+        <div class="par-corpo">Colonna vertebrale</div>
+      </div>
+      <div class="par-voce">
+        <div class="par-albero">CORTECCIA</div>
+        <div class="par-freccia">→</div>
+        <div class="par-corpo">Pelle (protezione)</div>
+      </div>
+      <div class="par-voce">
+        <div class="par-albero">LINFA</div>
+        <div class="par-freccia">→</div>
+        <div class="par-corpo">Sangue / cuore</div>
+      </div>
+      <div class="par-voce">
+        <div class="par-albero">RADICI</div>
+        <div class="par-freccia">→</div>
+        <div class="par-corpo">Piedi / ancoramento</div>
+      </div>
+      <div class="par-voce">
+        <div class="par-albero">RAMI</div>
+        <div class="par-freccia">→</div>
+        <div class="par-corpo">Braccia / apertura</div>
+      </div>
+      <div class="par-voce">
+        <div class="par-albero">CHIOMA</div>
+        <div class="par-freccia">→</div>
+        <div class="par-corpo">Capelli / respiro</div>
+      </div>
+      <div class="par-voce">
+        <div class="par-albero">RETE RADICALE</div>
+        <div class="par-freccia">→</div>
+        <div class="par-corpo">Relazioni, comunità</div>
+      </div>
+      <div class="par-voce">
+        <div class="par-albero">FORESTA</div>
+        <div class="par-freccia">→</div>
+        <div class="par-corpo">Classe, società</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     ATTIVITÀ 1
+════════════════════════════════════ -->
+<section id="att1" class="attivita a1 rv">
+
+  <div class="att-head">
+    <div class="att-numero-grande">01</div>
+    <div class="att-kicker">Attività 1 · Corpo individuale</div>
+    <h2 class="att-titolo">Sono un albero:<br>la mappa corporea incarnata</h2>
+    <p class="att-sottotitolo">Leggere il testo di Gianferrari come una partitura per il proprio corpo: ogni parallelismo anatomico diventa un'istruzione di autoascolto</p>
+    <div class="att-pillole">
+      <span class="pillola">⏱ 25 minuti</span>
+      <span class="pillola">◈ Individuale</span>
+      <span class="pillola">↳ Diario di lettura incarnata</span>
+      <span class="pillola">Materiali: albo · carta · matite</span>
+    </div>
+  </div>
+
+  <div class="cit-albo">
+    <p>«Forse non ci hai mai fatto caso, ma tu sei come un albero: la colonna vertebrale è il tuo tronco, la pelle è come la corteccia, il tuo cuore ti dà forza e sostegno, come la linfa. I tuoi piedi sono le radici — sentili affondare ed espandersi nel terreno per sostenerti. Le tue braccia sono rami: tendile verso il sole.»</p>
+    <cite>Come un albero — Maria Gianferrari / Felicita Sala · Rizzoli 2021</cite>
+  </div>
+
+  <div class="att-corpo">
+
+    <div class="blocco">
+      <div class="b-label">Intenzione pedagogica</div>
+      <div class="b-testo">
+        <p>Il testo di Gianferrari non descrive l'albero dall'esterno: si rivolge al lettore in seconda persona e gli dice <em>dove nel suo corpo</em> si trova già un albero. Questa è lettura incarnata nel senso più letterale: il testo nomina il corpo del lettore mentre il lettore lo legge.</p>
+        <p>Per ragazzi di terza liceo — spesso abituati a una lettura cognitiva e distaccata — questa attività introduce la pratica dell'<strong>autoascolto guidato dal testo</strong>: non si legge <em>di</em> qualcosa, si legge <em>con</em> il proprio corpo come strumento di comprensione.</p>
+        <p>Il collegamento con la fenomenologia merleau-pontiana è diretto e nominabile: il corpo vissuto (<em>Leib</em>) non è un oggetto che si osserva ma il soggetto attraverso cui si conosce. Gianferrari lo fa poeticamente, senza nominarlo. Il docente può scegliere se esplicitare il riferimento teorico durante o dopo l'attività.</p>
+      </div>
+    </div>
+
+    <div class="blocco">
+      <div class="b-label">Sequenza operativa</div>
+      <ul class="steps">
+        <li class="step">
+          <span class="step-n">01</span>
+          <span><strong>Preparazione (3 min):</strong> gli studenti si siedono comodamente, piedi a terra, schiena leggermente distaccata dallo schienale. Silenzio. Il docente invita a fare tre respiri lenti e a «arrivare» nel proprio corpo — senza spiegar ancora nulla.</span>
+        </li>
+        <li class="step">
+          <span class="step-n">02</span>
+          <span><strong>Prima lettura silenziosa (5 min):</strong> ogni studente sfoglia l'albo da solo, in silenzio totale, osservando solo le illustrazioni — senza leggere il testo. Unica istruzione: notare dove nel corpo si sente qualcosa mentre guarda.</span>
+        </li>
+        <li class="step">
+          <span class="step-n">03</span>
+          <span><strong>Lettura ad alta voce incarnata (8 min):</strong> il docente legge il testo lentamente, una frase per volta. Dopo ogni parallelismo anatomico — «la colonna vertebrale è il tuo tronco» — fa una pausa di 5 secondi. Gli studenti, con gli occhi chiusi, portano l'attenzione alla parte del corpo nominata: la sentono? Com'è adesso? È tesa, rilassata, calda, presente?</span>
+        </li>
+        <li class="step">
+          <span class="step-n">04</span>
+          <span><strong>Mappa corporea (8 min):</strong> ogni studente disegna il proprio corpo su un foglio — una sagoma semplice. Per ogni parte nominata nel testo, scrive una o due parole che descrivono la sensazione fisica trovata durante la lettura. Non giudizi, non metafore: solo la sensazione nuda. Esempio: «colonna → tesissima, alta» oppure «piedi → pesanti, radici che non sento».</span>
+        </li>
+        <li class="step">
+          <span class="step-n">05</span>
+          <span><strong>Condivisione breve (4 min):</strong> in cerchio, ciascuno condivide <em>una sola zona del corpo</em> — la più sorprendente. Non spiegare: solo nominare la parte e la sensazione. Il docente raccoglie le parole senza commentarle.</span>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="att-corpo" style="margin-top: 28px;">
+
+    <div class="blocco">
+      <div class="b-label">La mappa corporea — zone e domande guida</div>
+      <div class="mappa-corpo">
+        <svg class="corpo-svg" viewBox="0 0 80 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- testa -->
+          <ellipse cx="40" cy="18" rx="14" ry="16" stroke="#2d6040" stroke-width="1.2" opacity="0.7"/>
+          <!-- tronco -->
+          <path d="M26 34 Q22 80 24 110 Q26 125 40 126 Q54 125 56 110 Q58 80 54 34 Z" stroke="#2d6040" stroke-width="1.2" fill="none" opacity="0.5"/>
+          <!-- colonna -->
+          <line x1="40" y1="34" x2="40" y2="110" stroke="#2d6040" stroke-width="1.5" opacity="0.4" stroke-dasharray="3,3"/>
+          <!-- braccia-rami -->
+          <path d="M26 50 Q10 58 5 75" stroke="#2d6040" stroke-width="1.2" fill="none" opacity="0.6"/>
+          <path d="M54 50 Q70 58 75 75" stroke="#2d6040" stroke-width="1.2" fill="none" opacity="0.6"/>
+          <!-- dita -->
+          <path d="M5 75 Q2 82 4 85" stroke="#2d6040" stroke-width="0.8" opacity="0.5"/>
+          <path d="M5 75 Q5 83 7 86" stroke="#2d6040" stroke-width="0.8" opacity="0.5"/>
+          <path d="M75 75 Q78 82 76 85" stroke="#2d6040" stroke-width="0.8" opacity="0.5"/>
+          <path d="M75 75 Q75 83 73 86" stroke="#2d6040" stroke-width="0.8" opacity="0.5"/>
+          <!-- gambe -->
+          <path d="M32 126 Q28 142 30 156" stroke="#2d6040" stroke-width="1.2" fill="none" opacity="0.5"/>
+          <path d="M48 126 Q52 142 50 156" stroke="#2d6040" stroke-width="1.2" fill="none" opacity="0.5"/>
+          <!-- radici-piedi -->
+          <path d="M30 156 Q25 159 22 158" stroke="#2d6040" stroke-width="1" opacity="0.6"/>
+          <path d="M30 156 Q28 160 26 160" stroke="#2d6040" stroke-width="0.8" opacity="0.5"/>
+          <path d="M50 156 Q55 159 58 158" stroke="#2d6040" stroke-width="1" opacity="0.6"/>
+          <path d="M50 156 Q52 160 54 160" stroke="#2d6040" stroke-width="0.8" opacity="0.5"/>
+          <!-- cuore -->
+          <circle cx="38" cy="62" r="5" stroke="#2d6040" stroke-width="0.8" opacity="0.35" fill="none"/>
+          <path d="M35 61 Q34 58 37 60 Q40 58 39 61 Q39 64 37 66 Q35 64 35 61Z" fill="#2d6040" opacity="0.25"/>
+        </svg>
+        <ul class="zona-list">
+          <li class="zona-item"><span class="zona-nome">COLONNA/TRONCO</span><span>Sento il mio asse verticale? Dove è teso, dove cede?</span></li>
+          <li class="zona-item"><span class="zona-nome">PELLE/CORTECCIA</span><span>Sento la superficie del mio corpo? Dove finisce il mio corpo e inizia l'aria?</span></li>
+          <li class="zona-item"><span class="zona-nome">CUORE/LINFA</span><span>Sento il battito? Dove lo sento — solo nel petto, o anche altrove?</span></li>
+          <li class="zona-item"><span class="zona-nome">PIEDI/RADICI</span><span>Sento i piedi sul pavimento? Quanto sono «piantati»?</span></li>
+          <li class="zona-item"><span class="zona-nome">BRACCIA/RAMI</span><span>Le braccia tendono da qualche parte o stanno ferme? Cosa «cercano»?</span></li>
+          <li class="zona-item"><span class="zona-nome">TESTA/CHIOMA</span><span>Sento il peso della testa? Dove guarda, dove tende?</span></li>
+        </ul>
+      </div>
+      <div class="domanda">«Quale parte del tuo corpo hai trovato che <em>non riconoscevi</em> — come se ti fosse straniera fino a questo momento? Cosa dice di te quella scoperta?»</div>
+    </div>
+
+    <div class="blocco">
+      <div class="b-label">Connessioni disciplinari</div>
+      <div class="b-testo">
+        <p><strong>Filosofia:</strong> il parallelismo di Gianferrari è un caso di <em>embodied cognition</em> (Varela, Thompson, Rosch): la comprensione non avviene nella testa astratta ma è distribuita nell'intero organismo corporeo. Il corpo dell'albero e il corpo umano condividono strutture funzionali omologhe.</p>
+        <p><strong>Scienze:</strong> la linfa come sangue e il sistema radicale come rete neurali sono metafore scientificamente pertinenti. Gli alberi trasmettono informazioni chimiche attraverso il micorrizoma (rete di funghi che collega le radici) — analogo funzionale del sistema nervoso.</p>
+        <p><strong>Arte:</strong> le illustrazioni di Felicita Sala usano la tecnica della sovrapposizione e trasparenza per fondere figure umane e vegetali. Chiedere agli studenti: quale scelta grafica rende visibile il parallelismo? Come lo farei io con altri strumenti?</p>
+      </div>
+      <div class="nota">Questa attività funziona meglio se il docente partecipa: disegna anche lui la propria mappa corporea e condivide una sensazione. Il permesso a sentire viene sempre dall'esempio di chi facilita.</div>
+
+      <div class="scheda-diario" style="border-top-color: var(--verde); margin-top:20px">
+        <div class="sd-label">Domande per il Diario di Lettura Incarnata</div>
+        <ul class="sd-domande">
+          <li class="sd-domanda">Quale parte del tuo corpo era più «presente» durante la lettura? Descrivila fisicamente — non psicologicamente.</li>
+          <li class="sd-domanda">C'è una zona del tuo corpo che il testo ha nominato e che non riuscivi a sentire? Cosa significa non sentire una parte di sé?</li>
+          <li class="sd-domanda">Gianferrari dice che la corteccia è «morta fuori ma a protezione di quanto si ha dentro». Esiste nella tua pelle un luogo che funziona così?</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     ATTIVITÀ 2
+════════════════════════════════════ -->
+<section id="att2" class="attivita a2 rv">
+
+  <div class="att-head">
+    <div class="att-numero-grande">02</div>
+    <div class="att-kicker">Attività 2 · Corpo nello spazio</div>
+    <h2 class="att-titolo">Radici e rami:<br>leggere con il corpo nello spazio</h2>
+    <p class="att-sottotitolo">La postura come interpretazione del testo — il corpo che assume la forma dell'albero scopre cosa significa essere radicati e protesi verso la luce</p>
+    <div class="att-pillole">
+      <span class="pillola">⏱ 25 minuti</span>
+      <span class="pillola">◈ Individuale in piedi</span>
+      <span class="pillola">↳ Lettura performativa</span>
+      <span class="pillola">Materiali: albo · spazio libero in aula</span>
+    </div>
+  </div>
+
+  <div class="cit-albo">
+    <p>«Sii un albero! Punta in alto, tendi i tuoi rami verso il sole. Senti le tue radici affondare ed espandersi nel terreno per sostenerti. Muovi le foglie al vento per respirare l'aria, bevi il sole e dai energia a te stesso e al mondo intero.»</p>
+    <cite>Come un albero — Maria Gianferrari / Felicita Sala · Rizzoli 2021</cite>
+  </div>
+
+  <div class="att-corpo">
+
+    <div class="blocco">
+      <div class="b-label">Intenzione pedagogica</div>
+      <div class="b-testo">
+        <p>Il testo di Gianferrari non si limita a descrivere: <em>impartisce istruzioni corporee</em>. «Sii un albero», «punta in alto», «tendi i rami», «senti le radici» — sono comandi posturali. Questa attività li esegue letteralmente: ogni frase del testo diventa un'istruzione di postura da incarnare nello spazio.</p>
+        <p>Per studenti di liceo scientifico, la dimensione scientifica è immediatamente disponibile: la postura eretta dell'albero è una soluzione evolutiva alla gravità, esattamente come la nostra colonna vertebrale. La <strong>gravitropismo</strong> (la crescita orientata in risposta alla gravità) ha il suo equivalente umano nella propriocezione posturale. Leggere il testo in piedi, assumendo le posture descritte, è anche una piccola fenomenologia del corpo gravitazionale.</p>
+        <p>L'obiettivo non è fare teatro o yoga: è usare il corpo come strumento di comprensione del testo. La differenza tra leggere <em>di</em> radici e sentire il peso del proprio corpo sui piedi mentre si dice «radici» è la differenza tra la lettura cognitiva e la lettura incarnata.</p>
+      </div>
+    </div>
+
+    <div class="blocco">
+      <div class="b-label">Sequenza operativa</div>
+      <ul class="steps">
+        <li class="step">
+          <span class="step-n">01</span>
+          <span><strong>Disposizione (2 min):</strong> gli studenti si alzano e si distribuiscono nello spazio dell'aula, ciascuno con abbastanza spazio per aprire le braccia. Piedi paralleli, larghezza dei fianchi. Il docente spiega: «Ogni frase del testo che leggerò è un'istruzione per il vostro corpo. Seguila fisicamente, non nella testa.»</span>
+        </li>
+        <li class="step">
+          <span class="step-n">02</span>
+          <span><strong>Le radici (5 min):</strong> il docente legge lentamente: <em>«Senti le tue radici affondare ed espandersi nel terreno per sostenerti.»</em> Gli studenti portano tutta l'attenzione ai piedi: premono leggermente il pavimento, notano il peso del corpo, distribuiscono il peso su tutta la pianta. Poi la stessa frase riletta — cambia qualcosa? Si sentono più o meno stabili?</span>
+        </li>
+        <li class="step">
+          <span class="step-n">03</span>
+          <span><strong>Il tronco (4 min):</strong> <em>«La colonna vertebrale è il tuo tronco — forma e sostegno.»</em> Invito a sentire la colonna come asse verticale che connette il suolo al cielo. Allungare leggermente la nuca verso l'alto, lasciare che la colonna si distenda. Poi: come si legge un testo da questa postura rispetto alla postura curva abituale?</span>
+        </li>
+        <li class="step">
+          <span class="step-n">04</span>
+          <span><strong>I rami (4 min):</strong> <em>«Tendi i tuoi rami verso il sole. Muovi le foglie al vento per respirare.»</em> Le braccia si aprono lentamente verso l'alto e ai lati — non come esercizio ginnico, ma come ricerca di dove c'è luce. Notare la differenza di sensazione tra braccia aperte e braccia chiuse sul petto. Quale postura si avvicina di più a come ci si sente abitualmente?</span>
+        </li>
+        <li class="step">
+          <span class="step-n">05</span>
+          <span><strong>Lettura incarnata completa (7 min):</strong> un volontario legge ad alta voce l'intero testo dell'albo mentre gli altri mantengono la postura dell'albero. Ogni volta che viene nominata una parte del corpo — tronco, corteccia, radici, rami — chi ascolta porta l'attenzione a quella zona. Dopo la lettura: 30 secondi di silenzio immobile.</span>
+        </li>
+        <li class="step">
+          <span class="step-n">06</span>
+          <span><strong>Condivisione (4 min):</strong> ritornare seduti. Domanda al gruppo: «La lettura in piedi con il corpo aperto ha cambiato qualcosa nella comprensione del testo? Cosa è arrivato diversamente?» Raccogliere 4–5 risposte.</span>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="att-corpo" style="margin-top: 28px;">
+
+    <div class="blocco">
+      <div class="b-label">Analisi delle illustrazioni · Felicita Sala</div>
+      <div class="b-testo">
+        <p>Le tavole di Felicita Sala sono fondamentali per questa attività. L'illustratrice sovrappone corpo umano e corpo vegetale in immagini che mostrano <em>fisicamente</em> ciò che il testo dice metaforicamente: una figura umana le cui gambe diventano radici, le cui braccia si prolungano in rami, la cui pelle si confonde con la corteccia.</p>
+        <p>Chiedere agli studenti, dopo l'attività corporea: <strong>quale tavola dell'albo vi sembra più «vera» ora</strong> che avete abitato quella postura? Prima di fare l'attività, quale avreste scelto?</p>
+        <p>Questo lavoro sulle illustrazioni introduce il concetto di <strong>immagine come istruzione corporea</strong>: certe immagini non si «guardano» soltanto — producono una risposta posturale, una tensione o un rilassamento, una voglia di muoversi in un certo modo. Questa è la dimensione incarnata della lettura visiva.</p>
+      </div>
+      <div class="domanda">«Quando ti sei sentito più come un albero — con le radici o con i rami aperti? Cosa dice questa preferenza del tuo corpo di come stai in questo momento?»</div>
+    </div>
+
+    <div class="blocco">
+      <div class="b-label">Tavola comparativa · posture e stati corporei</div>
+      <table class="tavola">
+        <thead>
+          <tr>
+            <th>Postura dell'albero</th>
+            <th>Struttura corporea</th>
+            <th>Sensazione attesa</th>
+            <th>Domanda incarnata</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RADICI</td>
+            <td>Piedi sul suolo, peso distribuito, ginocchia morbide</td>
+            <td>Stabilità, presenza, ancoramento alla realtà presente</td>
+            <td>Dove mi sento radicato oggi — in questo posto, in questa vita?</td>
+          </tr>
+          <tr>
+            <td>TRONCO</td>
+            <td>Colonna allungata, asse verticale, nuca distesa</td>
+            <td>Dignità, solidità, connessione alto-basso</td>
+            <td>Qual è il mio asse? Cosa mi tiene in piedi quando tutto oscilla?</td>
+          </tr>
+          <tr>
+            <td>CORTECCIA</td>
+            <td>Consapevolezza della superficie corporea, della pelle</td>
+            <td>Confine tra sé e mondo, protezione, vulnerabilità</td>
+            <td>Dove il mio corpo è più esposto? Dove più protetto?</td>
+          </tr>
+          <tr>
+            <td>RAMI APERTI</td>
+            <td>Braccia aperte, petto aperto, sguardo verso l'alto</td>
+            <td>Apertura, ricerca, tensione verso qualcosa di non ancora raggiunto</td>
+            <td>Verso cosa tendono le mie braccia? Cosa sto cercando?</td>
+          </tr>
+          <tr>
+            <td>LINFA / CUORE</td>
+            <td>Attenzione al battito, alla circolazione, al calore interno</td>
+            <td>Forza interiore, vitalità, energia che si distribuisce</td>
+            <td>Cosa mi dà energia oggi — cosa fa circolare la mia linfa?</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="scheda-diario" style="border-top-color: var(--terra); margin-top: 20px">
+        <div class="sd-label">Domande per il Diario di Lettura Incarnata</div>
+        <ul class="sd-domande">
+          <li class="sd-domanda">Descrivi la sensazione di stare in piedi con le radici (peso sui piedi) e poi con i rami aperti (braccia aperte). Quali parole del testo hai capito meglio in una postura rispetto all'altra?</li>
+          <li class="sd-domanda">Gianferrari invita a «bere il sole». Come si sente fisicamente questa frase nel corpo — non come immagine poetica, ma come sensazione?</li>
+          <li class="sd-domanda">C'è una postura dell'albero che non riesci a fare con il corpo? Cosa ti impedisce — fisicamente, non psicologicamente?</li>
+        </ul>
+      </div>
+
+      <div class="nota">Se lo spazio non permette di stare in piedi, l'attività funziona anche seduti: le radici diventano i piedi e la schiena sulla sedia, i rami le braccia e le mani sul tavolo. Ciò che conta è l'attenzione somatica alla postura, non la sua forma esteriore.</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     ATTIVITÀ 3
+════════════════════════════════════ -->
+<section id="att3" class="attivita a3 rv">
+
+  <div class="att-head">
+    <div class="att-numero-grande">03</div>
+    <div class="att-kicker">Attività 3 · Corpo sociale</div>
+    <h2 class="att-titolo">Siamo foresta:<br>la rete sotterranea in classe</h2>
+    <p class="att-sottotitolo">Il testo come dispositivo relazionale — la comunicazione tra alberi come modello incarnato di lettura condivisa e cura reciproca</p>
+    <div class="att-pillole">
+      <span class="pillola">⏱ 25 minuti</span>
+      <span class="pillola">◈ Gruppi · poi collettivo</span>
+      <span class="pillola">↳ Scrittura creativa incarnata</span>
+      <span class="pillola">Materiali: albo · fili di lana o nastro · foglietti</span>
+    </div>
+  </div>
+
+  <div class="cit-albo">
+    <p>«Come te e tutti gli uomini, anche gli alberi sono esseri sociali. Comunicano tra loro, condividono cibo e risorse, si prendono cura l'uno dell'altro e, quando sono insieme, sono più forti. In una grande rete sotterranea di informazioni, si avvisano in caso di pericolo. Siate alberi, allora, e insieme saremo foresta!»</p>
+    <cite>Come un albero — Maria Gianferrari / Felicita Sala · Rizzoli 2021</cite>
+  </div>
+
+  <div class="att-corpo">
+
+    <div class="blocco">
+      <div class="b-label">Intenzione pedagogica</div>
+      <div class="b-testo">
+        <p>La seconda metà dell'albo trasforma il parallelismo corporeo individuale in una riflessione sul corpo sociale. Gli alberi non sono individui isolati: sono nodi di una rete — il <em>micorrizoma</em>, la rete sotterranea di funghi che connette le radici degli alberi di una foresta, permettendo lo scambio di nutrienti, acqua e informazioni.</p>
+        <p>Questa rete è già una metafora potente per una classe: una comunità di individui che, attraverso connessioni non sempre visibili, si nutrono reciprocamente, si avvisano del pericolo, condividono risorse. La <strong>lettura incarnata relazionale</strong> che questa attività propone è leggere il testo non come individui ma come nodi di una rete — la comprensione che emerge dal gruppo è diversa da quella individuale.</p>
+        <p>Il collegamento con la neurobiologia è esplicito e nominabile: la struttura del micorrizoma è analoga a quella delle reti neurali. Sia l'albero che il cervello umano funzionano come sistemi connessi distribuiti — nessun nodo ha senso da solo.</p>
+      </div>
+    </div>
+
+    <div class="blocco">
+      <div class="b-label">Sequenza operativa</div>
+      <ul class="steps">
+        <li class="step">
+          <span class="step-n">01</span>
+          <span><strong>La rete fisica (5 min):</strong> il docente tiene un gomitolo di lana o nastro. Legge la frase sul micorrizoma, poi lancia il gomitolo a uno studente tenendo il capo. Quello studente lo lancia a un altro, che lo lancia a un altro ancora. In pochi giri si crea una rete fisica tra i corpi. Chiedere a tutti di tenerla tesa: sentire la tensione nel palmo della mano è sentire la rete. Se uno si muove, tutti sentono.</span>
+        </li>
+        <li class="step">
+          <span class="step-n">02</span>
+          <span><strong>La rete come testo (5 min):</strong> il docente legge il testo dell'albo sulla comunicazione degli alberi mentre la rete è tesa. Ogni volta che viene nominata una forma di scambio — condividere cibo, avvisare del pericolo, sostenersi — uno studente «manda un segnale» tirando leggermente la sua parte di filo. Gli altri lo sentono nel palmo. Questo è leggere con il corpo la dimensione relazionale del testo.</span>
+        </li>
+        <li class="step">
+          <span class="step-n">03</span>
+          <span><strong>Sciogliere la rete (2 min):</strong> lentamente, ogni studente lascia cadere il filo. Osservare insieme: la rete non scompare, rimane sul pavimento — visibile, ma non più tesa. Come la rete di relazioni che c'è sempre, anche quando non la sentiamo attiva.</span>
+        </li>
+        <li class="step">
+          <span class="step-n">04</span>
+          <span><strong>Gruppi-foresta (8 min):</strong> gruppi di 4–5. Ogni gruppo legge l'ultima parte dell'albo (dalla comunicazione degli alberi in poi) e discute: <em>«Cosa condividiamo in questo gruppo che non vediamo? Quale "nutrimento" passa attraverso le nostre connessioni — non le amicizie visibili, ma le radici sotterranee?»</em> Ogni gruppo scrive su un foglio tre parole: una risorsa che condivide, un pericolo a cui si avvisa, una cosa che lo rende più forte insieme.</span>
+        </li>
+        <li class="step">
+          <span class="step-n">05</span>
+          <span><strong>La foresta della classe (5 min):</strong> i foglietti di tutti i gruppi vengono appesi o disposti sul pavimento, connessi con fili che riproducono la rete. Il docente legge l'ultima frase dell'albo: <em>«Siate alberi, allora, e insieme saremo foresta.»</em> Silenzio di un minuto prima di qualsiasi commento.</span>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="att-corpo" style="margin-top: 28px;">
+
+    <div class="blocco">
+      <div class="b-label">Approfondimento scientifico incarnato</div>
+      <div class="b-testo">
+        <p><strong>Il micorrizoma (Wood Wide Web):</strong> la rete di funghi micorrizici che connette le radici degli alberi di una foresta è stata scoperta dalla biologa Suzanne Simard negli anni '90. Gli alberi più grandi — chiamati «alberi madre» — inviano zucchero agli alberi più piccoli in ombra attraverso questa rete. La rete risponde alle crisi: quando un albero viene attaccato da parassiti, rilascia segnali chimici che attivano le difese degli alberi vicini.</p>
+        <p>Chiedere agli studenti: <strong>chi è l'«albero madre» in questa classe?</strong> Non nel senso di chi comanda — nel senso di chi condivide risorse, chi avvisa del pericolo, chi sostiene quando uno è in ombra. La domanda è corporea prima che sociale: dove nel corpo sentite questa figura?</p>
+        <p>Il collegamento con la biologia del III liceo è diretto: la simbiosi mutualistica, la comunicazione chimica tra organismi, i sistemi adattativi complessi. Gianferrari lo traduce in immagine poetica — il docente può decidere se restare nella metafora o aprire verso il contenuto scientifico.</p>
+      </div>
+      <div class="domanda">«Nella foresta, gli alberi condividono zucchero — la risorsa più preziosa — con i vicini più deboli. Qual è il tuo "zucchero"? Cosa condividi già, anche senza saperlo, con chi ti è accanto?»</div>
+    </div>
+
+    <div class="blocco">
+      <div class="b-label">Scrittura creativa incarnata — prodotto finale</div>
+      <div class="b-testo">
+        <p>Come produzione scritta che emerge dall'attività, proporre agli studenti <strong>una delle tre forme</strong>:</p>
+        <p><strong>A) Il mio profilo di albero (individuale, 15 righe):</strong> descrivere sé stessi come un albero specifico — non la specie biologica, ma la forma: come sono le tue radici oggi? Il tuo tronco è diritto, storto, ramificato? La tua chioma è fitta, rada, mosca dal vento? Dove stai nella foresta — al centro, al margine, all'ombra di un altro?</p>
+        <p><strong>B) La lettera del micorrizoma (coppia, 20 righe):</strong> scrivere in prima persona come una radice che si connette alla radice di un altro albero. Cosa le passa? Non solo risorse: anche paure, bisogni, silenzi.</p>
+        <p><strong>C) Il saggio breve incarnato (individuale, 400 parole):</strong> partendo dall'albo e dall'esperienza dei tre laboratori, scrivere un testo argomentativo su: «Perché il corpo è la prima sede della comprensione». Usare almeno due esempi dall'esperienza fatta nelle tre attività.</p>
+      </div>
+      <div class="nota">Le forme A e B producono materiali che possono comporre la «foresta della classe» — testi appesi alle pareti, connessi come un micorrizoma visibile. La forma C prepara alla scrittura argomentativa della maturità, ancorandola però all'esperienza corporea concreta.</div>
+
+      <div class="scheda-diario" style="border-top-color: var(--cielo); margin-top: 20px">
+        <div class="sd-label">Domande per il Diario di Lettura Incarnata</div>
+        <ul class="sd-domande">
+          <li class="sd-domanda">Quando hai sentito il filo teso nel palmo della mano durante la rete, cos'hai sentito fisicamente? Era diverso dal semplice contatto con un oggetto?</li>
+          <li class="sd-domanda">Gianferrari dice che gli alberi sono «più forti quando sono insieme». Nel tuo corpo, senti questa frase come vera? Dove, fisicamente, senti la forza che viene dalla connessione con altri?</li>
+          <li class="sd-domanda">C'è qualcuno in questa classe la cui «radice» senti connessa alla tua, anche senza averlo mai detto? Descrivi quella connessione come sensazione fisica, non come pensiero.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- PIEDE -->
+<div class="piede">
+  <div><strong>Come un albero · Laboratorio di lettura incarnata</strong></div>
+  <div>3 attività · ~75 minuti · Liceo Scientifico III</div>
+  <div>UDA Il Corpo che Legge · A.S. 2025/2026</div>
+</div>
+
+<script>
+const rvs = document.querySelectorAll('.rv');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+rvs.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
